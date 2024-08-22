@@ -19,14 +19,19 @@ export default class Game {
     const goblin = document.createElement("img");
     goblin.src = this.goblinImgSrc;
     goblin.classList.add("goblin");
-
-    let currentCell = this.cells[Math.floor(Math.random() * this.cells.length)];
+    let previousCellIndex = Math.floor(Math.random() * this.cells.length);
+    let currentCell = this.cells[previousCellIndex];
     currentCell.appendChild(goblin);
 
     this.intervalId = setInterval(() => {
       goblin.classList.add("hidden");
 
-      const randomCellIndex = Math.floor(Math.random() * this.cells.length);
+      let randomCellIndex;
+      do {
+        randomCellIndex = Math.floor(Math.random() * this.cells.length);
+      } while (randomCellIndex === previousCellIndex); // Убеждаемся, что новый индекс не равен предыдущему
+
+      previousCellIndex = randomCellIndex;
       currentCell = this.cells[randomCellIndex];
 
       currentCell.appendChild(goblin);
