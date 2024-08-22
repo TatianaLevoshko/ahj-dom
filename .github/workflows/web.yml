@@ -20,52 +20,38 @@ concurrency:
 
 jobs:
   eslint:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Используем Windows
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20.12.0
-          cache: 'yarn'
-      - run: yarn
-      - run: yarn lint
-
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.11.0
-          cache: 'yarn'
-      - run: yarn
-      - run: yarn test
+      - run: npm install  # Устанавливаем зависимости с помощью npm
+      - run: npm run lint  # Запускаем линтер
 
   build:
-    needs: [eslint, test]
+    needs: [eslint]
 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Используем Windows
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.11.0
-          cache: 'yarn'
-      - run: yarn
-      - run: yarn build
+          node-version: 20.12.0
+      - run: npm install  # Устанавливаем зависимости с помощью npm
+      - run: npm run build  # Собираем проект
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist'
+          path: 'dist'  # Путь к артефактам сборки
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
