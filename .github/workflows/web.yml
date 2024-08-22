@@ -55,5 +55,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      - name: Fix line endings in eslint.config.mjs
+      - name: Convert line endings to LF
         run: sed -i 's/\r$//' eslint.config.mjs
+
