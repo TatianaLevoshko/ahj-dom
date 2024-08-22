@@ -1,0 +1,29 @@
+image: Visual Studio 2022
+
+branches:
+  only:
+    - master  # Для ветки master
+    - main    # Для ветки main
+
+cache:
+  - node_modules
+
+install:
+  - npm install
+
+# Отключаем встроенную систему сборки Appveyor
+build: off
+
+build_script:
+  - npm run build
+
+test_script:
+  - npm run lint && npm test
+
+# Скрипт для развёртывания на GitHub Pages
+deploy_script:
+  - git config --global credential.helper store  # Настраиваем сохранение учетных данных
+  - git config --global user.name AppVeyor  # Устанавливаем имя пользователя Git для коммитов
+  - git config --global user.email ci@appveyor.com  # Устанавливаем email пользователя Git для коммитов
+  - echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com" > "%HOMEDRIVE%%HOMEPATH%/.git-credentials"  # Настройка токена GitHub для аутентификации на Windows
+  - npx gh-pages -d dist -u "Appveyor Bot <ci@appveyor.com>"  # Развертывание на GitHub Pages с использованием gh-pages и учётных данных
